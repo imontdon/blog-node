@@ -14,8 +14,11 @@ const handleBlogRouter = async (req, res) => {
     const author = req.query.author || ''
     const keyword = req.query.keyword || ''
     const listData = await getList(author, keyword).catch(e => e)
-    console.log(listData)
-    return new SuccessModal(listData)
+    if(listData.ret_code === 0) {
+      return new SuccessModal(listData)
+    } else {
+      return new ErrorModal(listData, listData.error)
+    }
   }
 
   // 获取博客详情

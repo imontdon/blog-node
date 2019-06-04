@@ -15,6 +15,7 @@ const getList = (author, keyword) => {
 
 // 获取博客详情
 const getDetail = (id) => {
+  let sql = 'select * from blogs where 1=1 '
   return [
     {
       id: 1,
