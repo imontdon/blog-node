@@ -1,3 +1,4 @@
+// 获取博客列表
 const getList = (author, keyword) => {
   return [
     {
@@ -17,6 +18,7 @@ const getList = (author, keyword) => {
   ]
 }
 
+// 获取博客详情
 const getDetail = (id) => {
   return [
     {
@@ -29,14 +31,29 @@ const getDetail = (id) => {
   ]
 }
 
+// 新建一篇博客
 const newBlog = (blogData = {}) => {
   console.log('newBlog blogData: ', blogData)
   return {
     id: 3
   }
 }
+
+// 更新博客
+const updateBlog = (id, blogData = {}) => {
+  console.log('updateBlog: ' ,id, blogData)
+  return true
+}
+
+// 删除博客
+const deleteBlog = (id) => {
+  console.log('deleteBlog:', id)
+  return true
+}
 module.exports = {
   getList,
   getDetail,
-  newBlog
+  newBlog,
+  updateBlog,
+  deleteBlog
 }
