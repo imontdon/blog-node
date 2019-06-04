@@ -13,7 +13,8 @@ const handleBlogRouter = async (req, res) => {
   if (method === 'GET' && req.path === '/api/blog/list') {
     const author = req.query.author || ''
     const keyword = req.query.keyword || ''
-    const listData = await getList(author, keyword)
+    const listData = await getList(author, keyword).catch(e => e)
+    console.log(listData)
     return new SuccessModal(listData)
   }
 

@@ -42,15 +42,17 @@ const execQuery = (sql, values, callback) => {
 
 /** 
  * [执行SQL语句]
- * @param  {[String]} sql         [Required]
- * @return {[Object]}             
+ * @param  {[String]} sql [Required]
+ * @return {[promise]}             
  */
 const execSQL = (sql, values) => {
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     if (sql) {
       execQuery(sql, values, (err, results) => {
         resolve(handleResults(err, results));
       })
+    } else {
+      reject(handleResults('参数错误', null));
     }
   })
 }
@@ -63,9 +65,9 @@ const execSQL = (sql, values) => {
  */
 const handleResults = (error, data) => {
   if (data) {
-    return { data, success: true, error: null, status: 200 }
+    return { ret_data: data, success: true, error: null, ret_code: 0 }
   } else {
-    return { success: false, error, status: 200 };
+    return { success: false, error, ret_code: 1 };
   }
 }
 module.exports = {
