@@ -31,8 +31,6 @@ const serverHandle = async (req, res) => {
   res.setHeader('Content-type', 'application/json')
 
 
-
-
   // 获取path
   const url = req.url
   req.path = url.split('?')[0]
@@ -45,7 +43,7 @@ const serverHandle = async (req, res) => {
   req.body = postData
 
   // 处理BLOG路由
-  const blogData = handleBlogRouter(req, res)
+  const blogData = await handleBlogRouter(req, res)
   
   if (blogData) {
     res.end(JSON.stringify(blogData))

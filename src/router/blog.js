@@ -6,14 +6,14 @@ const {
   deleteBlog
 } = require('../controller/blog')
 const { SuccessModal, ErrorModal } = require('../modal/resModal')
-const handleBlogRouter = (req, res) => {
+const handleBlogRouter = async (req, res) => {
   const method = req.method
   const id = req.query.id || ''
   // 获取博客
   if (method === 'GET' && req.path === '/api/blog/list') {
     const author = req.query.author || ''
     const keyword = req.query.keyword || ''
-    const listData = getList(author, keyword)
+    const listData = await getList(author, keyword)
     return new SuccessModal(listData)
   }
 

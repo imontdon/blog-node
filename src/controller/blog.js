@@ -1,21 +1,16 @@
+const { execSQL } = require('../db/mysql')
 // 获取博客列表
 const getList = (author, keyword) => {
-  return [
-    {
-      id: 1,
-      title: 'i am guozhizhang',
-      author: 'guozhizhang',
-      content: 'guozhizhangAAAA',
-      createTime: new Date()
-    },
-    {
-      id: 2,
-      title: 'i am guozhizhangBBB',
-      author: 'guozhizhangBBB',
-      content: 'guozhizhangBBBB',
-      createTime: new Date()
-    },
-  ]
+
+  let sql = 'select * from blogs where 1=1 '
+  if (author) {
+    sql += ` and author= ${author}`
+  }
+  if (keyword) {
+    sql += ` and title like '%${keyword}%'`
+  }
+  sql += ' order by createtime desc'
+  return execSQL(sql)
 }
 
 // 获取博客详情
