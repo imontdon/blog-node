@@ -2,20 +2,48 @@ const handleBlogRouter = require('./src/router/blog')
 const handleUserRouter = require('./src/router/user')
 
 const querystring = require('querystring')
-const serverHandle = (req, res) => {
-  /* const method = req.method
-  console.log(method)
-  const url = req.url
-  const path = url.split('?')[0] */
-  // const query = querystring.parse(url.split('?')[1])
 
+// 处理POST
+const getPostData = (req) => {
+  return new Promise((reslove, reject) => {
+    if (req.method !== 'POST') {
+      reslove({})
+      return
+    }
+    if (req.headers['content-type'] !== 'application/json') {
+      reslove({})
+      return
+    }
+    let postData = ''
+    req.on('data', chunk => {
+      postData += chunk.toString()
+    })
+    req.on('end', () => {
+      if (!postData) {
+        reslove({})
+        return
+      }
+      reslove(JSON.parse(postData))
+    })
+  })
+}
+const serverHandle = async (req, res) => {
   res.setHeader('Content-type', 'application/json')
+
+
+
 
   // 获取path
   const url = req.url
   req.path = url.split('?')[0]
 
+  // 获取GET DATA
   req.query = querystring.parse(url.split('?')[1])
+
+  // 获取POST DATA
+  const postData = await getPostData(req)
+  req.body = postData
+
   // 处理BLOG路由
   const blogData = handleBlogRouter(req, res)
   
@@ -36,28 +64,5 @@ const serverHandle = (req, res) => {
   res.writeHeader(404, { 'Content-type': 'text/plain' })
   res.write('404 NOT FOUND\n')
   res.end()
-  /* const resData = {
-    method,
-    url,
-    path,
-    query,
-    env: process.env.NODE_ENV
-  }
-  res.end(JSON.stringify(resData)) */
-  /* if (method === 'GET') {
-    res.end(
-      JSON.stringify(resData)
-    )
-  }
-  if (method === 'POST') {
-      let postData = ''
-      req.on('data', chunk => {
-        postData += chunk
-      })
-      req.on('end', () => {
-        resData.postData = postData
-        res.end(JSON.stringify(resData))
-      })
-  } */
 }
 module.exports = serverHandle

@@ -1,23 +1,30 @@
+const {
+  getList, 
+  getDetail,
+  newBlog
+} = require('../controller/blog')
+const { SuccessModal, ErrorModal } = require('../modal/resModal')
 const handleBlogRouter = (req, res) => {
   const method = req.method
   // 获取博客
   if (method === 'GET' && req.path === '/api/blog/list') {
-    return {
-      msg: '这是获取博客列表接口'
-    }
+    const author = req.query.author || ''
+    const keyword = req.query.keyword || ''
+    const listData = getList(author, keyword)
+    return new SuccessModal(listData)
   }
 
   // 获取博客详情
   if (method === 'GET' && req.path === '/api/blog/detail') {
-    return {
-      msg: '这是获取博客详情接口'
-    }
+    const id = req.query.id || ''
+    const detailData = getDetail(id)
+    return new SuccessModal(detailData)
   }
   // 新建博客接口
   if (method === 'POST' && req.path === '/api/blog/new') {
-    return {
-      msg: '这是新建博客接口'
-    }
+    const blogData = req.body
+    const data = newBlog(blogData)
+    return new SuccessModal(data)
   }
 
   // 更新一篇博客

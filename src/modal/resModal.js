@@ -25,3 +25,7 @@ class ErrorModal extends BaseModal {
     this.errNum = -1
   }
 }
+module.exports = {
+  SuccessModal,
+  ErrorModal
+}
