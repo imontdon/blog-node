@@ -42,6 +42,7 @@ const serverHandle = async (req, res) => {
   const postData = await getPostData(req)
   req.body = postData
 
+  console.log('路由: ', req.path)
   // 处理BLOG路由
   const blogData = await handleBlogRouter(req, res)
   

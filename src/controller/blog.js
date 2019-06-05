@@ -1,4 +1,7 @@
-const { execSQL } = require('../db/mysql')
+const { 
+  execSql,
+  insertData
+} = require('../db/mysql')
 // 获取博客列表
 const getList = (author, keyword) => {
 
@@ -10,7 +13,7 @@ const getList = (author, keyword) => {
     sql += ` and title like '%${keyword}%'`
   }
   sql += ' order by createtime desc'
-  return execSQL(sql)
+  return execSql(sql)
 }
 
 // 获取博客详情
@@ -30,9 +33,12 @@ const getDetail = (id) => {
 // 新建一篇博客
 const newBlog = (blogData = {}) => {
   console.log('newBlog blogData: ', blogData)
-  return {
-    id: 3
-  }
+  return insertData('blogs', {
+    title: blogData.title,
+    content: blogData.content,
+    author: blogData.author,
+    createtime: new Date().valueOf()
+  })
 }
 
 // 更新博客

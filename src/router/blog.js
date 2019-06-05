@@ -29,8 +29,12 @@ const handleBlogRouter = async (req, res) => {
   // 新建博客接口
   if (method === 'POST' && req.path === '/api/blog/new') {
     const blogData = req.body
-    const data = newBlog(blogData)
-    return new SuccessModal(data)
+    const results = await newBlog(blogData)
+    if (results.ret_data.affectedRows === 1) {
+      return new SuccessModal(results)
+    } else {
+      return new ErrorModal(results, results.error)
+    }
   }
 
   // 更新一篇博客

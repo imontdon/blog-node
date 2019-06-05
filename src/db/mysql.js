@@ -1,4 +1,5 @@
 const mysql = require('mysql')
+const { humpToHyphen } = require('../utils')
 const { MYSQL_CONFIG } = require('../config/db')
 
 // 创建连接对象
@@ -9,18 +10,6 @@ const pool = mysql.createPool(MYSQL_CONFIG)
 // conn.connect()
 
 // 统一执行sql
-const exec = (sql) => {
-  return new Promise((reslove, reject) => {
-    conn.query(sql, (err, result) => {
-      if (err) {
-        reject(err)
-        return
-      }
-      reslove(result)
-    })
-  })
-}
-
 const execQuery = (sql, values, callback) => {
   let errInfo = ''
   pool.getConnection((err, connection) => {
@@ -32,6 +21,7 @@ const execQuery = (sql, values, callback) => {
       connection.release()
       if (err) {
         errInfo = `DB-SQL语句执行错误: ${err}`
+        console.log(errInfo)
         callback(err)
       } else {
         callback(err, rows)
@@ -45,7 +35,7 @@ const execQuery = (sql, values, callback) => {
  * @param  {[String]} sql [Required]
  * @return {[promise]}             
  */
-const execSQL = (sql, values) => {
+const execSql = (sql, values) => {
   return new Promise((resolve, reject) => {
     if (sql) {
       execQuery(sql, values, (err, results) => {
@@ -57,6 +47,40 @@ const execSQL = (sql, values) => {
   })
 }
 
+/**
+ * 
+ * @param {[string]} tableName 
+ * @param {[Array]} values 
+ * @description sql = 'INSERT INTO SET XX=XX, XX=XX'
+ */
+const insertData = (tableName, values) => {
+  return new Promise((reslove, reject) => {
+    if (!tableName || !values) {
+      reject(handleResults('参数错误', null))
+    } else {
+      let sql = `INSERT INTO ?? `
+      sql = valuesSet(sql, values)
+      execQuery(sql, tableName, (error, results) => {
+        reslove(handleResults(error, results))
+      })
+    }
+  })
+}
+/**
+ * @param {[string]]} sql [sql]
+ * @param {[Object]} values 
+ */
+const valuesSet = (sql, values) => {
+  let res = []
+  Object.keys(values).forEach(key => {
+    const k = humpToHyphen(key)
+    let value = values[key]
+    res.push(`${k} = '${value}'`)
+  })
+  const SETSQL = 'SET ' + res.join(', ').trim()
+  console.log(sql + SETSQL)
+  return sql + SETSQL
+}
 /**
  * [处理返回结果集]
  * @param  {[Array]} error  [description]
@@ -71,5 +95,6 @@ const handleResults = (error, data) => {
   }
 }
 module.exports = {
-  execSQL
+  execSql,
+  insertData
 }
