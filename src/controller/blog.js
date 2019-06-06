@@ -17,9 +17,9 @@ const getList = async (author, keyword) => {
     sql += ` and title like '%${keyword}%'`
   }
   sql += ' order by createtime desc'
-  const res = await pagingQuery('blogs', { pageSize: 3, pageNum: 4 }, [`author = ${author}`])
+  const res = await pagingQuery('blogs', { pageSize: 3, pageNum: 2 }, [`author = ${author}`])
   console.log(res)
-  return queryData(sql)
+  return await queryData(sql)
 }
 
 // 获取博客详情
