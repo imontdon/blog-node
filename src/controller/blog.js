@@ -2,20 +2,23 @@ const {
   queryData,
   insertData,
   updateData,
-  deleteData
+  deleteData,
+  pagingQuery
 } = require('../db/mysql')
 const { formatDate } = require('../utils')
 // 获取博客列表
-const getList = (author, keyword) => {
+const getList = async (author, keyword) => {
 
   let sql = 'select * from blogs where 1=1 '
   if (author) {
-    sql += ` and author= ${author}`
+    sql += ` and author = ${author}`
   }
   if (keyword) {
     sql += ` and title like '%${keyword}%'`
   }
   sql += ' order by createtime desc'
+  const res = await pagingQuery('blogs', { pageSize: 3, pageNum: 4 }, [`author = ${author}`])
+  console.log(res)
   return queryData(sql)
 }
 

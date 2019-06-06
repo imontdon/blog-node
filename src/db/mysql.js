@@ -11,8 +11,8 @@ const pool = mysql.createPool(MYSQL_CONFIG)
 
 /** 
  * [公共SQL]
- * @param  {[String]} sql [Required]
- * @return {[promise]}             
+ * @param  {string} sql [Required]
+ * @return {promise}             
  */
 const execQuery = (sql, values, callback) => {
   let errInfo = ''
@@ -37,7 +37,7 @@ const execQuery = (sql, values, callback) => {
 
 /** 
  * [查询数据]
- * @param  {[String]} sql [Required]
+ * @param  {String} sql [Required]
  * @return {[promise]}             
  */
 const queryData = (sql, values) => {
@@ -54,8 +54,8 @@ const queryData = (sql, values) => {
 
 /**
  * [插入数据]
- * @param {[string]} tableName 
- * @param {[Object]} values 
+ * @param {string} tableName 
+ * @param {[string]} values 
  * @description sql = 'INSERT INTO SET XX=XX, XX=XX'
  */
 const insertData = (tableName, values) => {
@@ -70,9 +70,9 @@ const insertData = (tableName, values) => {
       }) */
       execUpdate(sql, tableName, (err, results) => {
         if (err) {
-          reject(handleResults(err, null))
+          reject(handleResults('新建失败', null))
         } else {
-          reslove(handleResults(err, results))
+          reslove(handleResults('新建成功', results))
         }
       })
     }
@@ -82,9 +82,9 @@ const insertData = (tableName, values) => {
 
 /**
  * [更新数据]
- * @param {[string]} tableName 
- * @param {[Object]} values 
- * @param {[Array]} whereArr 
+ * @param {string} tableName 
+ * @param {[string]} values 
+ * @param {[string]} whereArr 
  * @description sql = 'UPDATE TABLENAME SET XX=XX, XX=XX WHERE'
  */
 const updateData = (tableName, values, whereArr) => {
@@ -120,9 +120,9 @@ const updateData = (tableName, values, whereArr) => {
 
 /**
  * [删除数据]
- * @param {*} sql 
- * @param {*} values 
- * @param {*} callback 
+ * @param {string} sql 
+ * @param {[string]} values 
+ * @callback callback 
  */
 const deleteData = (tableName, whereArr) => {
   return new Promise((reslove, reject) => {
@@ -150,7 +150,7 @@ const deleteData = (tableName, whereArr) => {
  * [公共更新]
  * @param {*} sql 
  * @param {[string]} values 
- * @param {[fuction]} callback
+ * @callback callback
  */
 const execUpdate = (sql, values, callback) => {
   execQuery(sql, values, (err, results) => {
@@ -162,8 +162,8 @@ const execUpdate = (sql, values, callback) => {
 
 /**
  * [设置SET]
- * @param {[string]]} sql [sql]
- * @param {[Object]} values 
+ * @param {string} sql [sql]
+ * @param {Object} values 
  */
 const valuesSet = (sql, values) => {
   let res = []
@@ -178,8 +178,8 @@ const valuesSet = (sql, values) => {
 
 /**
  * [设置WHERE]
- * @param {*} error 
- * @param {*} data 
+ * @param {string} sql 
+ * @param {[string]} where 
  */
 const appendWhere = (sql, where = []) => {
   if (Object.is([], where)) {
@@ -189,14 +189,102 @@ const appendWhere = (sql, where = []) => {
     return `${sql} WHERE ${whereSQL}`
   }
 }
+/**
+ * [设置LIMIT]
+ * @param {string} sql 
+ * @param {Object} pageInfo 
+ * @param {number} pageInfo.pageSize - 页大小 [require]
+ * @param {number} pageInfo.pageNum - 第几页 [require]
+ */
+const appendLimit = (sql, pageInfo) => {
+  let pageBegin = 0, pageNum = 1, pageSize = 1
+  if (pageInfo.hasOwnProperty('pageNum')) {
+    Object.keys(pageInfo).forEach(key => {
+      if (key === 'pageSize') {
+        pageSize = pageInfo[key]
+      }
+      if (key === 'pageNum') {
+        pageNum = pageInfo[key]
+      }
+    })
+    pageBegin = (pageNum - 1) * pageSize
+    return `${sql} LIMIT ${pageBegin}, ${pageSize} `
+  } else {
+    return ` ${sql} LIMIT ${pageInfo.pageSize}`
+  }
+  
+}
+
+/**
+ * [设置子查询LIMIT]
+ * @param {string} sql 
+ * @param {Object} pageInfo 
+ * @param {number} pageInfo.pageSize - 页大小 [require]
+ * @param {number} pageInfo.pageNum - 第几页 [require]
+ */
+const appendSubLimit = (sql, pageInfo) => {
+  let pageBegin = 0, pageNum = 1, pageSize = 1
+  Object.keys(pageInfo).forEach(key => {
+    if (key === 'pageSize') {
+      pageSize = pageInfo[key]
+    }
+    if (key === 'pageNum') {
+      pageNum = pageInfo[key]
+    }
+  })
+  pageBegin = (pageNum - 1) * pageSize
+  return `${sql} LIMIT ${pageBegin}, 1 `
+}
 
 
 
 /**
+ * [子查询SQL]
+ * @param {string} tableName 
+ * @param {Object} pageInfo [require]
+ * @param {number} pageInfo.pageSize - 页大小 [require]
+ * @param {number} pageInfo.pageNum - 第几页 [require]
+ * @param {[string]} where 
+ * @return {string} sql
+ * @description id递增可用
+ */
+const getSubQuery = (tableName, pageInfo, where = []) => {
+  let subQuery = ` SELECT id FROM ${tableName} `
+  subQuery = appendWhere(subQuery, where)
+  subQuery = appendSubLimit(subQuery, pageInfo)
+  return subQuery
+}
+
+
+/**
+ * [分页-子查询优化]
+ * @param {string} tableName 
+ * @param {Object} pageInfo [require]
+ * @param {number} pageInfo.pageSize - 页大小 [require]
+ * @param {number} pageInfo.pageNum - 第几页 [require]
+ * @param {[string]} where 
+ * @returns {promise}
+ * @description id递增可用
+ */
+const pagingQuery = (tableName, pageInfo, where = []) => {
+  return new Promise(reslove => {
+    const subQuery = getSubQuery(tableName, pageInfo, where)
+    let sql = 'SELECT * FROM ?? '
+    where.push(` id >= (${subQuery})`)
+    sql = appendWhere(sql, where)
+    sql = appendLimit(sql, { pageSize: pageInfo.pageSize })
+    // reslove(subQuery)
+    execQuery(sql, tableName, (err, results) => {
+      reslove(handleResults(err, results))
+    })
+  })
+}
+
+/**
  * [处理返回结果集]
- * @param  {[Array]} error  [description]
- * @param  {[Array]} result [description]
- * @return {[type]}        [description]
+ * @param  {string} info  [description]
+ * @param  {Object} result [description]
+ * @return {Object}        [description]
  */
 const handleResults = (info, data) => {
   if (data) {
@@ -207,9 +295,12 @@ const handleResults = (info, data) => {
 }
 
 
+
+
 module.exports = {
   queryData,
   insertData,
   updateData,
-  deleteData
+  deleteData,
+  pagingQuery
 }
