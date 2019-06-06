@@ -6,54 +6,54 @@ const {
   deleteBlog
 } = require('../controller/blog')
 const { SuccessModal, ErrorModal } = require('../modal/resModal')
-const handleBlogRouter = async (req, res) => {
+const handleBlogRouter = async (req) => {
   const method = req.method
   const id = req.query.id || ''
   // 获取博客
   if (method === 'GET' && req.path === '/api/blog/list') {
     const author = req.query.author || ''
     const keyword = req.query.keyword || ''
-    const listData = await getList(author, keyword).catch(e => e)
-    if(listData.ret_code === 0) {
-      return new SuccessModal(listData)
+    const result = await getList(author, keyword).catch(e => e)
+    if(result.ret_code === 0) {
+      return new SuccessModal(result)
     } else {
-      return new ErrorModal(listData, listData.error)
+      return new ErrorModal(result)
     }
   }
 
   // 获取博客详情
   if (method === 'GET' && req.path === '/api/blog/detail') {
-    const detailData = getDetail(id)
-    return new SuccessModal(detailData)
+    const result = await getDetail(id).catch(e => e)
+    return new SuccessModal(result)
   }
   // 新建博客接口
   if (method === 'POST' && req.path === '/api/blog/new') {
     const blogData = req.body
-    const results = await newBlog(blogData)
-    if (results.ret_data.affectedRows === 1) {
-      return new SuccessModal(results)
+    const result = await newBlog(blogData).catch(e => e)
+    if (result.ret_code === 0 && result.ret_data.affectedRows === 1) {
+      return new SuccessModal(result)
     } else {
-      return new ErrorModal(results, results.error)
+      return new ErrorModal(result)
     }
   }
 
   // 更新一篇博客
   if (method === 'POST' && req.path === '/api/blog/update') {
-    const result = updateBlog(id, req.body)
-    if (result) {
+    const result = updateBlog(id, req.body).catch(e => e)
+    if (result.ret_code === 0) {
       return new SuccessModal('成功')
     } else {
-      return new ErrorModal('失败')
+      return new ErrorModal(result)
     }
   }
   
   // 删除一篇博客
   if (method === 'POST' && req.path === '/api/blog/del') {
-    const result = deleteBlog(id)
-    if (result) {
-      return new SuccessModal('删除成功')
+    const result = await deleteBlog(id).catch(e => e)
+    if (result.ret_code === 0) {
+      return new SuccessModal(result)
     } else {
-      return new ErrorModal('删除失败')
+      return new ErrorModal(result)
     }
   }
 

@@ -1,7 +1,10 @@
 const { 
-  execSql,
-  insertData
+  queryData,
+  insertData,
+  updateData,
+  deleteData
 } = require('../db/mysql')
+const { formatDate } = require('../utils')
 // 获取博客列表
 const getList = (author, keyword) => {
 
@@ -13,44 +16,41 @@ const getList = (author, keyword) => {
     sql += ` and title like '%${keyword}%'`
   }
   sql += ' order by createtime desc'
-  return execSql(sql)
+  return queryData(sql)
 }
 
 // 获取博客详情
-const getDetail = (id) => {
+const getDetail = async (id) => {
   let sql = 'select * from blogs where 1=1 '
-  return [
-    {
-      id: 1,
-      author: 'zhangsan',
-      title: 'testA',
-      content: 'content11111',
-      createTime: new Date()
-    }
-  ]
+  if (id) {
+    sql += ` and id = ${id} `
+  }
+  return await queryData(sql)
 }
 
 // 新建一篇博客
-const newBlog = (blogData = {}) => {
+const newBlog = async (blogData = {}) => {
   console.log('newBlog blogData: ', blogData)
-  return insertData('blogs', {
+  return await insertData('blogs', {
     title: blogData.title,
     content: blogData.content,
     author: blogData.author,
-    createtime: new Date().valueOf()
+    createtime: formatDate(new Date())
   })
 }
 
 // 更新博客
-const updateBlog = (id, blogData = {}) => {
+const updateBlog = async (id, blogData = {}) => {
   console.log('updateBlog: ' ,id, blogData)
-  return true
+  const res = await updateData('blogs', blogData, [`id = ${id}`])
+  return res
 }
 
 // 删除博客
-const deleteBlog = (id) => {
+const deleteBlog = async (id) => {
   console.log('deleteBlog:', id)
-  return true
+  const res = await deleteData('blogs', [`id = ${id}`])
+  return res
 }
 module.exports = {
   getList,
