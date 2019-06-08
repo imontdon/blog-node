@@ -1,15 +1,16 @@
 const { queryData } = require('../db/mysql')
 // 登录
-const loginCheck = (username, password) => {
+const userLogin = (username, password) => {
   /* if (username === 'zhangsan' && password === '123') {
     return true
   } else {
     return false
   } */
-  const sql = 'SELECT user_name, real_name from blog_user where user_name = ? and password = ?'
-  return queryData(sql, [username, password])
+  console.log(username, password)
+  const sql = `SELECT user_name, real_name from blog_user where user_name = ? and password = ?`
+  return queryData(sql, [username, password]).catch(e => e)
 }
 
 module.exports = {
-  loginCheck
+  userLogin
 }

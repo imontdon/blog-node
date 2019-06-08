@@ -38,6 +38,22 @@ const serverHandle = async (req, res) => {
   // 获取GET DATA
   req.query = querystring.parse(url.split('?')[1])
 
+
+  // 解析cookie
+  req.cookie = {}
+  const cookieStr = req.headers.cookie || ''  // key = value; key2 = value2
+  cookieStr.split(';').forEach(item => {
+    if (!item) {
+      return 
+    }
+    const arr = item.split("=")
+    const key = arr[0].trim()
+    const value = arr[1].trim()
+    req.cookie[key] = value
+  })
+
+  console.log(req.cookie, 'cookie')
+
   // 获取POST DATA
   const postData = await getPostData(req)
   req.body = postData
@@ -52,7 +68,7 @@ const serverHandle = async (req, res) => {
   }
   
   // 处理USER路由
-  const userData = await handleUserRouter(req)
+  const userData = await handleUserRouter(req, res)
   if (userData) {
     res.end(JSON.stringify(userData))
     return
