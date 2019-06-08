@@ -42,8 +42,9 @@ const serverHandle = async (req, res) => {
   const postData = await getPostData(req)
   req.body = postData
 
+  console.log('\r\n路由: ', req.path)
   // 处理BLOG路由
-  const blogData = await handleBlogRouter(req, res)
+  const blogData = await handleBlogRouter(req)
   
   if (blogData) {
     res.end(JSON.stringify(blogData))
@@ -51,9 +52,9 @@ const serverHandle = async (req, res) => {
   }
   
   // 处理USER路由
-  const userData = handleUserRouter(req, res)
+  const userData = await handleUserRouter(req)
   if (userData) {
-    res.end(JSON.stringify(userData ))
+    res.end(JSON.stringify(userData))
     return
   }
   
