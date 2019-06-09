@@ -1,12 +1,6 @@
 const { userLogin } = require('../controller/user')
 const { SuccessModal, ErrorModal } = require('../modal/resModal')
 
-// 获取 cookie 过期时间
-const getCookieExpires = () => {
-  const date = new Date()
-  date.setTime(date.getTime() + (1000 * 60 * 60 * 24))
-  return date.toGMTString()
-}
 
 const handleUserRouter = async (req, res) => {
   const method = req.method
@@ -17,7 +11,10 @@ const handleUserRouter = async (req, res) => {
     const { username, password } = req.query
     const result = await userLogin(username, password)
     if (result.ret_code === 0 && result.ret_data.length > 0) {
-      res.setHeader('Set-Cookie', `username = ${username}; path = /; httpOnly; expires = ${getCookieExpires()} `) // HTTPOnly限制前端修改cookie
+      req.session.username = result.ret_data[0].user_name
+      req.session.realname = result.ret_data[0].real_name
+
+      console.log(req.session, req.session)
       return new SuccessModal(result.ret_data[0], '登录成功')
     } else {
       return new ErrorModal(result)
@@ -26,8 +23,10 @@ const handleUserRouter = async (req, res) => {
 
   // 测试登录验证
   if (method === 'GET' && req.path === '/api/user/login-test') {
-    if (req.cookie.username) {
-      return new SuccessModal()
+    if (req.session.username) {
+      return new SuccessModal({
+        session: req.session
+      })
     } else {
       return new ErrorModal('尚未登录')
     }
