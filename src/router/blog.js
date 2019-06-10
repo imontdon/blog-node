@@ -42,7 +42,7 @@ const handleBlogRouter = async (req) => {
 
     const loginCheckResult = await loginCheck(req)
     if (loginCheckResult) {
-      return loginCheck
+      return loginCheckResult
     }
     const result = await newBlog(blogData).catch(e => e)
     if (result.ret_code === 0 && result.ret_data.affectedRows === 1) {
@@ -56,7 +56,7 @@ const handleBlogRouter = async (req) => {
   if (method === 'POST' && req.path === '/api/blog/update') {
     const loginCheckResult = await loginCheck(req)
     if (loginCheckResult) {
-      return loginCheck
+      return loginCheckResult
     }
     const result = updateBlog(id, req.body).catch(e => e)
     if (result.ret_code === 0) {
@@ -70,7 +70,7 @@ const handleBlogRouter = async (req) => {
   if (method === 'POST' && req.path === '/api/blog/del') {
     const loginCheckResult = await loginCheck(req)
     if (loginCheckResult) {
-      return loginCheck
+      return loginCheckResult
     }
     const result = await deleteBlog(id).catch(e => e)
     if (result.ret_code === 0) {
