@@ -2,12 +2,14 @@ const redis = require('redis')
 
 const { REDIS_CONFIG } = require('../config/db')
 
-const redisClient = redis.createClient(REDIS_CONFIG.port, REDIS_CONFIG.host)
+const redisClient = redis.createClient(REDIS_CONFIG.port, REDIS_CONFIG.host, REDIS_CONFIG.opt)
 
 redisClient.on_error = (err) => {
   console.log(err)
 }
-
+redisClient.auth(REDIS_CONFIG.pwd, () => {
+  console.log('redis===')
+})
 const set = (key, value) => {
   if (typeof value === 'object') {
     value = JSON.stringify(value)
