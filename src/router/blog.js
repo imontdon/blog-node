@@ -6,6 +6,16 @@ const {
   deleteBlog
 } = require('../controller/blog')
 const { SuccessModal, ErrorModal } = require('../modal/resModal')
+
+// 登录验证
+const loginCheck = (req) => {
+  if (!req.session.username) {
+    return Promise.resolve(
+      new ErrorModal('尚未登录')
+    )
+  }
+}
+
 const handleBlogRouter = async (req) => {
   const method = req.method
   const id = req.query.id || ''
@@ -29,6 +39,11 @@ const handleBlogRouter = async (req) => {
   // 新建博客接口
   if (method === 'POST' && req.path === '/api/blog/new') {
     const blogData = req.body
+
+    const loginCheckResult = await loginCheck(req)
+    if (loginCheckResult) {
+      return loginCheck
+    }
     const result = await newBlog(blogData).catch(e => e)
     if (result.ret_code === 0 && result.ret_data.affectedRows === 1) {
       return new SuccessModal(result)
@@ -39,6 +54,10 @@ const handleBlogRouter = async (req) => {
 
   // 更新一篇博客
   if (method === 'POST' && req.path === '/api/blog/update') {
+    const loginCheckResult = await loginCheck(req)
+    if (loginCheckResult) {
+      return loginCheck
+    }
     const result = updateBlog(id, req.body).catch(e => e)
     if (result.ret_code === 0) {
       return new SuccessModal('成功')
@@ -49,6 +68,10 @@ const handleBlogRouter = async (req) => {
   
   // 删除一篇博客
   if (method === 'POST' && req.path === '/api/blog/del') {
+    const loginCheckResult = await loginCheck(req)
+    if (loginCheckResult) {
+      return loginCheck
+    }
     const result = await deleteBlog(id).catch(e => e)
     if (result.ret_code === 0) {
       return new SuccessModal(result)
