@@ -2,7 +2,8 @@ const handleBlogRouter = require('./src/router/blog')
 const handleUserRouter = require('./src/router/user')
 
 const querystring = require('querystring')
-
+const { access } = require('./src/utils/log')
+const { formatDate } = require('./src/utils')
 // 获取 cookie 过期时间
 const getCookieExpires = () => {
   const date = new Date()
@@ -16,6 +17,7 @@ const SESSION_DATA = {}
 // 处理POST
 const getPostData = (req) => {
   return new Promise((reslove, reject) => {
+    // req.pipe(res)
     if (req.method !== 'POST') {
       reslove({})
       return
@@ -41,7 +43,7 @@ const getPostData = (req) => {
 
 const serverHandle = async (req, res) => {
   res.setHeader('Content-type', 'application/json')
-
+  access(`${req.method} -- ${req.url} -- ${req.headers['user-agent']} -- ${Date.now()} -- ${formatDate(new Date())}`)
 
   // 获取path
   const url = req.url

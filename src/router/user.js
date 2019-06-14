@@ -6,9 +6,9 @@ const handleUserRouter = async (req, res) => {
   const method = req.method
 
   // 登录
-  if (method === 'POST' && req.path === '/api/user/login') {
-    const { username, password } = req.body
-    // const { username, password } = req.query
+  if (method === 'GET' && req.path === '/api/user/login') {
+    // const { username, password } = req.body
+    const { username, password } = req.query
     const result = await userLogin(username, password)
     if (result.ret_code === 0 && result.ret_data.length > 0) {
       req.session.username = result.ret_data[0].user_name
@@ -30,6 +30,9 @@ const handleUserRouter = async (req, res) => {
     } else {
       return new ErrorModal('尚未登录')
     }
+  }
+  if (method === 'POST' && req.path === '/api/usr/xss') {
+    return
   }
 }
 
