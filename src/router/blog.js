@@ -6,13 +6,17 @@ const {
   deleteBlog
 } = require('../controller/blog')
 const { SuccessModal, ErrorModal } = require('../modal/resModal')
+const { redisHmset, redisSet, redisGet } = require('../db/redis')
 
 // 登录验证
-const loginCheck = (req) => {
-  if (!req.session.username) {
+const loginCheck = async (req) => {
+  // console.log('session: ', req.session, await redisGet(req.session.username))
+  if (!await redisGet(req.body.username)) {
     return Promise.resolve(
       new ErrorModal('尚未登录')
     )
+  } else {
+    // console.log(`${req.session.username}用户已登录`)
   }
 }
 
@@ -39,7 +43,7 @@ const handleBlogRouter = async (req) => {
   // 新建博客接口
   if (method === 'POST' && req.path === '/api/blog/new') {
     const blogData = req.body
-
+    console.log(blogData, `位置: ${__filename}`)
     const loginCheckResult = await loginCheck(req)
     if (loginCheckResult) {
       return loginCheckResult
@@ -51,7 +55,6 @@ const handleBlogRouter = async (req) => {
       return new ErrorModal(result)
     }
   }
-
   // 更新一篇博客
   if (method === 'POST' && req.path === '/api/blog/update') {
     const loginCheckResult = await loginCheck(req)

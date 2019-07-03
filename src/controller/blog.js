@@ -33,7 +33,7 @@ const getDetail = async (id) => {
 
 // 新建一篇博客
 const newBlog = async (blogData = {}) => {
-  console.log('newBlog blogData: ', blogData)
+  console.log('newBlog blogData: ', blogData, `位置: ${__filename}`)
   return await insertData('blogs', {
     title: blogData.title,
     content: blogData.content,
@@ -44,13 +44,13 @@ const newBlog = async (blogData = {}) => {
 
 // 更新博客
 const updateBlog = async (id, blogData = {}) => {
-  console.log('updateBlog: ' ,id, blogData)
+  console.log('updateBlog: ' ,id, blogData, `位置: ${__filename}`)
   return await updateData('blogs', blogData, [`id = ${id}`]).catch(e => e)
 }
 
 // 删除博客
 const deleteBlog = async (id) => {
-  console.log('deleteBlog:', id)
+  console.log('deleteBlog:', id, `位置: ${__filename}`)
   return await deleteData('blogs', [`id = ${id}`]).catch(e => e)
   
 }

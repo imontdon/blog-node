@@ -18,17 +18,17 @@ const execQuery = (sql, values, callback) => {
   let errInfo = ''
   pool.getConnection((err, connection) => {
     if (err) {
-      console.log('database err: ', err)
+      console.log('database err: ', err, `位置: ${__filename}`)
       throw error;
     }
     connection.query(sql, values, (err, rows) => {
       connection.release()
       if (err) {
         errInfo = `DB-SQL语句执行错误: ${err}`
-        console.log(errInfo)
+        console.log(errInfo, `位置: ${__filename}`)
         callback(err)
       } else {
-        console.log(sql)
+        console.log(sql, `位置: ${__filename}`)
         callback(err, rows)
       }
     })

@@ -4,6 +4,7 @@ const handleUserRouter = require('./src/router/user')
 const querystring = require('querystring')
 const { access } = require('./src/utils/log')
 const { formatDate } = require('./src/utils')
+
 // 获取 cookie 过期时间
 const getCookieExpires = () => {
   const date = new Date()
@@ -12,17 +13,16 @@ const getCookieExpires = () => {
 }
 
 // session 数据
-const SESSION_DATA = {}
+// const SESSION_DATA = {}
 
 // 处理POST
 const getPostData = (req) => {
   return new Promise((reslove, reject) => {
-    // req.pipe(res)
     if (req.method !== 'POST') {
       reslove({})
       return
     }
-    if (req.headers['content-type'] !== 'application/json') {
+    if (req.headers['content-type'] !== 'application/json' && req.path !== '/api/user/login') {
       reslove({})
       return
     }
@@ -35,16 +35,30 @@ const getPostData = (req) => {
         reslove({})
         return
       }
-      reslove(JSON.parse(postData))
+      if (req.path === '/api/user/login') {
+        const entries = postData.split('&')
+        const obj = {}
+        entries.forEach(entry => {
+          obj[entry.split('=')[0]] = entry.split('=')[1]
+        })
+        postData = obj
+        console.log('postData', postData, `位置: ${__filename}`)
+        reslove(postData)
+      } else {
+        reslove(JSON.parse(postData))
+      }
     })
   })
 }
 
 
 const serverHandle = async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*'); //这个表示任意域名都可以访问，这样写不能携带cookie了。
+  res.setHeader('Access-Control-Allow-Credentials', 'true')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , content-type');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');//设置方法
   res.setHeader('Content-type', 'application/json')
   access(`${req.method} -- ${req.url} -- ${req.headers['user-agent']} -- ${Date.now()} -- ${formatDate(new Date())}`)
-
   // 获取path
   const url = req.url
   req.path = url.split('?')[0]
@@ -54,8 +68,14 @@ const serverHandle = async (req, res) => {
 
 
   // 解析cookie
-  req.cookie = {}
-  const cookieStr = req.headers.cookie || ''  // key = value; key2 = value2
+  // req.cookie = {}
+
+  // req.session = SESSION_DATA
+
+  // console.log('req.session: ', req.session)
+  
+  /* const cookieStr = req.headers.cookie || ''  // key = value; key2 = value2
+
   cookieStr.split(';').forEach(item => {
     if (!item) {
       return 
@@ -66,11 +86,11 @@ const serverHandle = async (req, res) => {
     req.cookie[key] = value
   })
 
-  console.log(req.cookie, 'cookie')
+  console.log(req.cookie, 'cookie') */
 
 
   // 解析session
-  let needSetCookie = false
+  /* let needSetCookie = false
   let userId = req.cookie.userid
   if (userId) {
     if (!SESSION_DATA[userId]) {
@@ -79,25 +99,26 @@ const serverHandle = async (req, res) => {
   } else {
     needSetCookie = true
     userId = `${Date.now()}_${Math.random()}`
+    console.log('userId', userId)
     SESSION_DATA[userId] = {}
   }
+  console.log('needSetCookie', needSetCookie)
   // console.log(SESSION_DATA[userId], 'SESSION_DATA[userId]')
   req.session = SESSION_DATA[userId] // 对象指针
-  
+  console.log('req.session', req.session) */
 
   // 获取POST DATA
   const postData = await getPostData(req)
   req.body = postData
 
-  console.log('\r\n路由: ', req.path)
-
+  console.log('\r\n路由: ', req.path, `位置: ${__filename}`)
   // 处理BLOG路由
   const blogData = await handleBlogRouter(req)
-  
   if (blogData) {
-    if (needSetCookie) {
+    /* if (needSetCookie) {
+      console.log('needSetCookie', needSetCookie)
       res.setHeader('Set-Cookie', `userid = ${userId}; path = /; httpOnly; expires = ${getCookieExpires()} `) // HTTPOnly限制前端修改cookie
-    }
+    } */
     res.end(JSON.stringify(blogData))
     return
   }
@@ -105,9 +126,10 @@ const serverHandle = async (req, res) => {
   // 处理USER路由
   const userData = await handleUserRouter(req, res)
   if (userData) {
-    if (needSetCookie) {
-      res.setHeader('Set-Cookie', `userid = ${userId}; path = /; httpOnly; expires = ${getCookieExpires()} `) // HTTPOnly限制前端修改cookie
-    }
+    /* if (needSetCookie) {
+      console.log([`userid = ${userId}`, `path = /`, `httpOnly`, `expires = ${getCookieExpires()}`].join(';'))
+      res.setHeader('Set-Cookie', [`userid = ${userId}`, `path = /`, `httpOnly`, `expires = ${getCookieExpires()}`]) // HTTPOnly限制前端修改cookie
+    } */
     res.end(JSON.stringify(userData))
     return
   }
