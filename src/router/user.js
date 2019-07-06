@@ -1,6 +1,7 @@
 const { userLogin } = require('../controller/user')
 const { SuccessModal, ErrorModal } = require('../modal/resModal')
 const { redisHmset, redisSet, redisGet } = require('../db/redis')
+const { loginCheck } = require('../utils')
 
 const handleUserRouter = async (req, res) => {
   const method = req.method
@@ -35,6 +36,19 @@ const handleUserRouter = async (req, res) => {
     }
   }
 
+  if (method === 'POST' && req.path ==='/api/user/checkLogin') {
+    // 登录验证
+    if (!await redisGet(`user${req.body.user}`)) {
+      return Promise.resolve(
+        new ErrorModal('尚未登录')
+      )
+    } else {
+      return Promise.resolve(
+        new SuccessModal('已登录')
+      )
+      // console.log(`${req.session.username}用户已登录`)
+    }
+  }
   // 测试登录验证
   /* if (method === 'GET' && req.path === '/api/user/login-test') {
     if (req.session.username) {

@@ -6,11 +6,11 @@ const { access } = require('./src/utils/log')
 const { formatDate } = require('./src/utils')
 
 // 获取 cookie 过期时间
-const getCookieExpires = () => {
+/* const getCookieExpires = () => {
   const date = new Date()
   date.setTime(date.getTime() + (1000 * 60 * 60 * 24))
   return date.toGMTString()
-}
+} */
 
 // session 数据
 // const SESSION_DATA = {}
@@ -22,7 +22,8 @@ const getPostData = (req) => {
       reslove({})
       return
     }
-    if (req.headers['content-type'] !== 'application/json' && req.path !== '/api/user/login') {
+    //  && req.path !== '/api/user/login'
+    if (req.headers['content-type'] !== 'application/json') {
       reslove({})
       return
     }
@@ -35,7 +36,7 @@ const getPostData = (req) => {
         reslove({})
         return
       }
-      if (req.path === '/api/user/login') {
+      /* if (req.path === '/api/user/login') {
         const entries = postData.split('&')
         const obj = {}
         entries.forEach(entry => {
@@ -46,18 +47,20 @@ const getPostData = (req) => {
         reslove(postData)
       } else {
         reslove(JSON.parse(postData))
-      }
+      } */
+      reslove(JSON.parse(postData))
     })
   })
 }
 
 
 const serverHandle = async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*'); //这个表示任意域名都可以访问，这样写不能携带cookie了。
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:1998'); //这个表示任意域名都可以访问，这样写不能携带cookie了。
   res.setHeader('Access-Control-Allow-Credentials', 'true')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , content-type');
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');//设置方法
   res.setHeader('Content-type', 'application/json')
+  res.setHeader('Access-Control-Max-Age', 600 ) // 将预检请求的结果缓存10分钟
   access(`${req.method} -- ${req.url} -- ${req.headers['user-agent']} -- ${Date.now()} -- ${formatDate(new Date())}`)
   // 获取path
   const url = req.url

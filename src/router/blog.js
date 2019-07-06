@@ -16,7 +16,7 @@ const loginCheck = async (req) => {
       new ErrorModal('尚未登录')
     )
   } else {
-    // console.log(`${req.session.username}用户已登录`)
+    console.log(`${req.body.username}用户已登录`)
   }
 }
 
