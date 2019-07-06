@@ -58,7 +58,7 @@ const redisHmset = (key, value) => {
 const redisHgetall = (key) => {
   redisClient.hgetall(key, (err, result) => {
     if (err) {
-      console.kog(err)
+      console.log(err)
       return false
     }
     console.log(result)
