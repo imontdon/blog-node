@@ -55,6 +55,22 @@ const redisHmset = (key, value) => {
   })
 }
 
+/**
+ * 
+ * @param {string} key 
+ * @param {Array} args 
+ * @return {boolean}
+ */
+const redisDel = (key, args) => {
+  const result = redisClient.del(key, ...args)
+  if (result) {
+    console.log(`redis删除key: ${key}成功`)
+  } else {
+    console.log(`redis删除失败`)
+  }
+  return result
+}
+
 const redisHgetall = (key) => {
   redisClient.hgetall(key, (err, result) => {
     if (err) {
@@ -68,6 +84,7 @@ const redisHgetall = (key) => {
 module.exports = {
   redisSet,
   redisGet,
+  redisDel,
   redisHmset,
   redisHgetall
 }

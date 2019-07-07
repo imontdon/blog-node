@@ -1,5 +1,5 @@
 const redis = require('redis')
-
+const async = require('async')
 // 创建客户端
 
 //
@@ -21,9 +21,10 @@ redisClient.auth('dws666', () => {
 })
 // 测试
 
-redisClient.set('name', 'dws')
+// redisClient.set('name', 'dws')
 
 const redisHmset = (key, value) => {
+  console.log(key, value)
   redisClient.hmset(key, value, (error) => {
     if (error) {
       console.log('redis hash设置出错: ',error)
@@ -33,9 +34,64 @@ const redisHmset = (key, value) => {
   })
 }
 
-redisHmset('name', { user_name: 'dws', real_name: 'dws' })
+// redisHmset('userdws', { user_name: 'dws', real_name: 'dws' })
 
-redisClient.get('name', (err, val) => {
+/* redisClient.keys('*', (err, replies) => {
+  console.log(replies)
+  for (let i = 0; i < replies.length; i++) {
+    // redisClient.del(replies[i], ..args)
+    if (replies[i].indexOf('_') > -1) {
+      redisClient.hgetall(replies[i], (err, result) => {
+        redisClient.hdel(replies[i], ...Object.keys(result))
+      })
+    } else {
+      redisClient.get(replies[i], (err, result) => {
+        const res = redisClient.del(replies[i], result)
+        console.log(res)
+      })
+    }
+  }
+}) */
+
+async.series([
+  (cb) => {
+    redisClient.keys('*', (err, replies) => {
+      console.log('keys: ', replies)
+      let i = 0
+      for (let reply of replies) {
+        // redisClient.del(replies[i], ..args)
+        if (reply.indexOf('_') > -1) {
+          redisClient.hgetall(reply, (err, result) => {
+            const res = redisClient.hdel(reply, ...Object.keys(result))
+            res ? i++ : null
+            console.log(i)
+            if (i === replies.length) {
+              cb(null, null)
+            }
+          })
+        } else {
+          redisClient.get(reply, (err, result) => {
+            const res = redisClient.del(reply, result)
+            res ? i++ : null
+            if (i === replies.length) {
+              cb(null, null)
+            }
+          })
+        }
+      }
+      if (replies.length === 0) {
+        cb(null, null)
+      }
+    })
+  }
+], (err, result) => {
+  redisClient.quit()
+  console.log('quit')
+})
+
+// redisClient.hm
+
+/* redisClient.get('name', (err, val) => {
   if (err) {
     console.log(err)
     return
@@ -43,4 +99,4 @@ redisClient.get('name', (err, val) => {
   console.log(val, 'val')
   // 退出
   redisClient.quit()
-})
+}) */
