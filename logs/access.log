@@ -108,4 +108,11 @@ OPTIONS -- /api/user/login -- Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWeb
 POST -- /api/user/checkLogin -- Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36 -- 1562470417670 -- 2019-07-07 11:33:37
 OPTIONS -- /api/user/login -- Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36 -- 1562470423528 -- 2019-07-07 11:33:43
 POST -- /api/user/login -- Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36 -- 1562470423536 -- 2019-07-07 11:33:43
+POST -- /api/user/checkLogin -- Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36 -- 1562470871029 -- 2019-07-07 11:41:11
+POST -- /api/user/checkLogin -- Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36 -- 1562470939979 -- 2019-07-07 11:42:19
+POST -- /api/user/checkLogin -- Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36 -- 1562470945822 -- 2019-07-07 11:42:25
+POST -- /api/user/checkLogin -- Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36 -- 1562470954191 -- 2019-07-07 11:42:34
+POST -- /api/user/checkLogin -- Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36 -- 1562470984230 -- 2019-07-07 11:43:04
+POST -- /api/user/checkLogin -- Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36 -- 1562471004467 -- 2019-07-07 11:43:24
+POST -- /api/user/login -- Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36 -- 1562471009335 -- 2019-07-07 11:43:29
 
