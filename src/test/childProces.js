@@ -52,6 +52,7 @@ fs.readFile(path.resolve(__dirname, '../utils/log-back.txt'), (err, data) => {
 })
 
 const subprocess = require('child_process').fork(`${__dirname}/sub.js`);
+const subprocess1 = require('child_process').fork(`${__dirname}/sub.js`);
 const server = require('net').createServer();
 // 打开 server 对象，并发送该句柄。
 server.on('connection', (socket) => {
@@ -60,5 +61,6 @@ server.on('connection', (socket) => {
 server.listen(1337, () => {
   console.log('服务端启动')
   subprocess.send('server', server);
+  subprocess1.send('server', server);
 });
 
