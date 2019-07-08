@@ -1,5 +1,7 @@
 const redis = require('redis')
-
+const {
+  formatDate
+} = require('../utils')
 const { REDIS_CONFIG } = require('../config/db')
 
 const redisClient = redis.createClient(REDIS_CONFIG.port, REDIS_CONFIG.host, REDIS_CONFIG.opt)
@@ -71,6 +73,34 @@ const redisDel = (key, args) => {
   return result
 }
 
+/**
+ * @description 过期时间
+ * @param {string} key 
+ * @param {number} milliseconds 毫秒
+ */
+const setRedisPexpire = (key, milliseconds) => {
+  const date = new Date()
+  const res = redisClient.pexpire(key, new Date(date.valueOf() + milliseconds))
+  if (res) {
+    const pexpireTime = new Date(date.valueOf() + milliseconds)
+    console.log(`redis, key: ${key} 过期时间为: ${formatDate(pexpireTime)}`)
+  }
+  return res
+}
+/**
+ * @description 过期时间
+ * @param {string} key 
+ * @param {number} seconds 秒
+ */
+const setRedisExpire = (key, seconds) => {
+  const date = new Date()
+  const res = redisClient.expire(key, seconds)
+  if (res) {
+    const expireTime = new Date(date.valueOf() + seconds * 1000)
+    console.log(`redis, key: ${key} 过期时间为: ${formatDate(expireTime)}`)
+  }
+}
+
 const redisHgetall = (key) => {
   redisClient.hgetall(key, (err, result) => {
     if (err) {
@@ -85,6 +115,8 @@ module.exports = {
   redisSet,
   redisGet,
   redisDel,
+  setRedisPexpire,
+  setRedisExpire,
   redisHmset,
   redisHgetall
 }

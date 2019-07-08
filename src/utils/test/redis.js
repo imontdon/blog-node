@@ -21,8 +21,6 @@ redisClient.auth('dws666', () => {
 })
 // 测试
 
-// redisClient.set('name', 'dws')
-
 const redisHmset = (key, value) => {
   console.log(key, value)
   redisClient.hmset(key, value, (error) => {
@@ -33,10 +31,40 @@ const redisHmset = (key, value) => {
     console.log('redis hash设置成功', key)
   })
 }
+/* redisClient.keys('*', (err, replies) => {
+  console.log(replies)
+  redisClient.quit()
+})  */
+/* const setRedisExpire = (key, seconds) => {
+  const date = new Date()
+  const res = redisClient.expire(key, seconds, (err, reply) => {
+    console.log(err, 'err')
+    if (err) {
+      console.log(err)
+      throw err
+    }
+    console.log(reply, key)
+  })
+  console.log(res)
+  if (res) {
+    const expireTime = new Date(date.valueOf() + seconds)
+    console.log(`redis, key: ${key} 过期时间为: ${formatDate(expireTime)}`)
+  }
+} */
+// const userid = '1562558355102_0.6902344983387627'
+// setRedisExpire(userid, 60 * 60 * 24)
+/* redisClient.expire('name', 10)
+redisClient.expire('userdws', 10)
 
+
+// redisClient.quit()
+redisClient.keys('*', (err, replies) => {
+  console.log(replies)
+  redisClient.quit()
+}) */
 // redisHmset('userdws', { user_name: 'dws', real_name: 'dws' })
 
-/* redisClient.keys('*', (err, replies) => {
+redisClient.keys('*', (err, replies) => {
   console.log(replies)
   for (let i = 0; i < replies.length; i++) {
     // redisClient.del(replies[i], ..args)
@@ -51,9 +79,11 @@ const redisHmset = (key, value) => {
       })
     }
   }
-}) */
+})
 
-async.series([
+
+// remove keys
+/* async.series([
   (cb) => {
     redisClient.keys('*', (err, replies) => {
       console.log('keys: ', replies)
@@ -87,7 +117,7 @@ async.series([
 ], (err, result) => {
   redisClient.quit()
   console.log('quit')
-})
+}) */
 
 // redisClient.hm
 
