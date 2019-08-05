@@ -8,7 +8,7 @@ const DEV_HOST = '127.0.0.1'
 let MYSQL_CONFIG = {}
 let REDIS_CONFIG = {}
 
-if (env === 'dev') {
+//if (env === 'dev') {
   MYSQL_CONFIG = {
     host: PROD_HOST,
     user: 'root',
@@ -23,7 +23,7 @@ if (env === 'dev') {
     host: PROD_HOST,
     password: 'dws666',
     opt: {}
-  }
+  //}
 }
 
 if (env === 'production') {

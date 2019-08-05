@@ -1,6 +1,6 @@
 const http = require('http')
 
-const PORT = 1997
+const PORT = 1337
 
 const serverHandle = require('../app')
 

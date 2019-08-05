@@ -5,8 +5,8 @@ const server = require('net').createServer();
 server.on('connection', (socket) => {
   socket.end('由父进程处理');
 });
-/* server.listen(1337, function() {
+server.listen(1337, function() {
   console.log('服务端启动')
   subprocess.send('server', server);
-  subprocess1.send('server', server);
-}); */
+  // subprocess1.send('server', server);
+});
