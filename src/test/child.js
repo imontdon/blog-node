@@ -1,9 +1,17 @@
 
-process.on('message', (m, server) => {
-  console.log('子进程收到消息', m);
+
+const http = require('http')
+
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-type': 'application/json' })
+  res.end('handle by child, pid: ', process.pid + '\n')
+})
+
+process.on('message', (m, tcp) => {
+  console.log(`子进程${process.pid}收到消息`, m);
   if (m === 'server') {
-    server.on('connection', (socket) => {
-      socket.end(`由子进程处理pid: ${process.pid}` );
-    });
+    tcp.on('connection', socket => {
+      server.emit('connection', socket)
+    })
   }
 });

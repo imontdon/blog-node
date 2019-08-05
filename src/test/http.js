@@ -22,7 +22,7 @@ const options = {
     Connection: 'keep-alive',
     'Content-Length': 351,
     'Content-Type': 'application/x-www-form-urlencoded',
-    Cookie: 'Language=zh_CN; jsessionid_cas=ZvBoAqQuT79rlTm3et3rSQ8Ik87NQIrH2-YVn5IK8MhAAKoG44V5!1190985634',
+    Cookie: 'Language=zh_CN; JSESSIONID=n4YcJRFkde8Rr1dWEQ_ynMtgAfElkbK8WsSKAoll90FHspgtAReB!-1691802725; jsessionid_cas=9W8cJRPIUWCgsxwmZCZub8MiNwNBqjDQZ5FAp3LIxgpqGb2k6WrI!-1691802725         ',
     Host: 'cas.hdu.edu.cn',
     Origin: 'https://cas.hdu.edu.cn',
     Referer: 'https://cas.hdu.edu.cn/cas/login?service=https%3A%2F%2Fi.hdu.edu.cn%2Ftp_up%2F',

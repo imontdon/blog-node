@@ -5,7 +5,9 @@ const PROD_HOST = '101.132.116.241'
 const DEV_HOST = '127.0.0.1'
 
 // 配置
-let MYSQL_CONFIG = {}
+let MYSQL_CONFIG = {
+
+}
 let REDIS_CONFIG = {}
 
 if (env === 'dev') {
@@ -42,6 +44,8 @@ if (env === 'production') {
     pwd: 'dws666',
     opt: {}
   }
+} else {
+  
 }
 
 module.exports = {

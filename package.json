@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "cross-env NODE_ENV=dev nodemon ./www/bin.js"
+    "dev": "cross-env NODE_ENV=dev nodemon ./www/bin.js",
+    "prod": "pm2 start www/bin.js && cross-env NODE_ENV=dev"
   },
   "keywords": [],
   "author": "",

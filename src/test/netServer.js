@@ -12,12 +12,11 @@ const clients = []
   socket.write('你好\r\n');
   socket.pipe(socket);
 }) */
-
+const subprocess = require('child_process').fork(`${__dirname}/child.js`);
 const server = net.createServer()
 
 server.on('connection', (socket) => {
   // socket.end('goodbye\n');
-  console.log(socket, '================')
   clients.push(socket)
   console.log(`地址: ${socket.remoteAddress}, 当前在线${clients.length}位`)
   socket.on('end', () => {
@@ -33,4 +32,5 @@ server.on('connection', (socket) => {
 
 server.listen(8080, () => {
   console.log('服务器启动')
+  subprocess.send('server', server)
 })

@@ -17,7 +17,7 @@ execFile('node', ['--version'], (error, stdout, stderr) => {
   console.log('node --version: ', stdout);
 });
 
-(function fetchHtml(url) {
+/* (function fetchHtml(url) {
   exec(`curl ${url}`, (err, stdout, stderr) => {
     if (err) {
       console.log(process.env.path.split(';'))
@@ -30,10 +30,10 @@ execFile('node', ['--version'], (error, stdout, stderr) => {
     })
     // console.log('result:', stdout)
   })
-})('https://baike.baidu.com/item/curl/10098606?fr=aladdin')
+})('https://baike.baidu.com/item/curl/10098606?fr=aladdin') */
 
 
-const fork = cp.fork(`${__dirname}/sub.js`)
+/* const fork = cp.fork(`${__dirname}/sub.js`)
 fs.readFile(path.resolve(__dirname, '../utils/log-back.txt'), (err, data) => {
   // console.log(data.toString())
   if (err) {
@@ -49,7 +49,7 @@ fs.readFile(path.resolve(__dirname, '../utils/log-back.txt'), (err, data) => {
   fork.on('exit', (code, signal) => {
     console.log(`子进程退出`, code, signal)
   })
-})
+}) */
 
 const subprocess = require('child_process').fork(`${__dirname}/sub.js`);
 const subprocess1 = require('child_process').fork(`${__dirname}/sub.js`);
@@ -58,9 +58,10 @@ const server = require('net').createServer();
 server.on('connection', (socket) => {
   socket.end('由父进程处理');
 });
-server.listen(1337, () => {
+server.listen(1338, () => {
   console.log('服务端启动')
   subprocess.send('server', server);
   subprocess1.send('server', server);
+  server.close()
 });
 
