@@ -9,14 +9,21 @@ const createWriteStream = (fileName) => {
 
 const accessWriteStream = createWriteStream('access.log')
 
-const access = (log) => {
-  writeLog(accessWriteStream, log)
-}
 
 const writeLog = (writeStream, log) => {
   writeStream.write(log + '\n\r')
 }
 
+
+const errorWriteStream = createWriteStream('error.log')
+const accessLog = (log) => {
+  writeLog(accessWriteStream, log)
+}
+
+const errorLog =  (log) => {
+  writeLog(errorWriteStream, log)
+}
 module.exports = {
-  access
+  accessLog,
+  errorLog
 }

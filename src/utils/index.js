@@ -30,7 +30,20 @@ const formatDate = function (date) {
 const getDate = (number) => {
   return number >= 10 ? number : '0' + number
 }
+
+
+const FILE = {
+  URL: 'http://192.168.22.240:1997/uploads/',
+  TYPE: {
+    VOICE: 'voice',
+    IMG: 'img',
+    VIDEO: 'video',
+    FILE: 'file'
+  },
+  FILEPATH: './public/uploads/'
+}
 module.exports = {
     humpToHyphen,
-    formatDate
+    formatDate,
+    FILE
 };
