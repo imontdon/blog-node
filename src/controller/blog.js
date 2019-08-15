@@ -5,6 +5,8 @@ const {
   deleteData,
   pagingQuery
 } = require('../db/mysql')
+
+const Page = require('../utils/page')
 const { formatDate } = require('../utils')
 // 获取博客列表
 const getList = async (author, keyword) => {

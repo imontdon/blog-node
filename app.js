@@ -59,7 +59,7 @@ const getPostData = (req) => {
       form.parse(req, (err, fieIds, files) => {
         if (err) {
           reslove({ error: 'form解析错误' })
-          errorLog(`form解析错误 位置: ${__filename}`)
+          errorLog(`form解析错误 位置: ${__filename} -- ${Date.now()} -- ${formatDate(new Date())}`)
           return
         }
         req.body = fieIds
