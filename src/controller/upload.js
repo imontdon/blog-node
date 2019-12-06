@@ -19,7 +19,7 @@ const moveFiles = async (req) => {
     })
     flag++
     arr.push({
-      filepath: `${ 'http://' + os.networkInterfaces()['以太网'][1].address + ':1997/uploads/' + FILE.TYPE.FILE + '/' + file.name}`,
+      filepath: `${ 'http://' + os.networkInterfaces()['以太网'][1].address + ':1997/uploads/' + FILE.TYPE.FILE + '/' + file.name}`, // 测试专用
       type: file.mimetype,
       size: file.size,
       filename: file.name,
@@ -29,57 +29,6 @@ const moveFiles = async (req) => {
       return await Promise.resolve(arr)
     }
   }
-  // return arr
-  /* const promise = await Promise.all(files.map(async (file) => { 
-    const p = await new Promise(resolve => {
-      fs.rename(file.path, FILE.FILEPATH + FILE.TYPE.FILE + '/' + file.name, (err) => {
-        if (err) {
-          console.log(err)
-          errorLog(`${err} :------${req.method} -- ${req.url} -- ${req.headers['user-agent']} -- ${Date.now()} -- ${formatDate(new Date())}`)
-        } else {
-          flag++
-          arr.push({
-            filepath: `${ 'http://' + os.networkInterfaces()['以太网'][1].address + ':1997/uploads/' + FILE.TYPE.FILE + '/' + file.name}`,
-            type: file.mimetype,
-            size: file.size,
-            filename: file.name,
-          })
-          if (flag === length) {
-            resolve(arr)
-          }
-        }
-      })
-    })
-  })) */
-
-  /* for (let file of req.files) {
-    // fs.readFile(file.path, (err, data) => {
-    //   if (err) {
-    //     console.log(err)
-    //     errorLog(`${err} :------${req.method} -- ${req.url} -- ${req.headers['user-agent']} -- ${Date.now()} -- ${formatDate(new Date())}`)
-    //     return err 
-    //   }
-    //   console.log('READ FILE--------------')
-    //   console.log(data)
-      fs.rename(file.path, FILE.FILEPATH + FILE.TYPE.FILE + '/' + file.name, (err) => {
-        if (err) {
-          console.log(err)
-          errorLog(`${err} :------${req.method} -- ${req.url} -- ${req.headers['user-agent']} -- ${Date.now()} -- ${formatDate(new Date())}`)
-        } else {
-          flag++
-          arr.push({
-            filepath: `${ 'http://' + os.networkInterfaces()['以太网'][1].address + ':1997/uploads/' + FILE.TYPE.FILE + '/' + file.name}`,
-            type: file.mimetype,
-            size: file.size,
-            filename: file.name,
-          })
-          if (flag === length) {
-            console.log(arr)
-          }
-        }
-      })
-    // })
-  } */
 }
 
 

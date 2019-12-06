@@ -1,7 +1,4 @@
 const https = require('https')
-const querystring = require('querystring')
-
-
 
 /* const postData = querystring.stringify({
   'service': 'https%3A%2F%2Fi.hdu.edu.cn%2Ftp_up%2F'
@@ -13,21 +10,21 @@ const options = {
   port: 443,
   // path: '/cas/login',
   path: '/tp_up/view?m=up',
-  method: 'POST',
+  method: 'GET',
   headers: {
+    Host: 'i.hdu.edu.cn',
+    Connection: 'keep-alive',
+    'Cache-Control': 'max-age=0',
+    'Upgrade-Insecure-Requests': 1,
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-User': '?1',
     Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+    'Sec-Fetch-Site': 'none',
+    Referer: 'https://i.hdu.edu.cn/tp_up/view;tp_up=uu__GyqlnihxRYaqhbtL6L95mW70dtrKkKJgttj5N4QJOavgLNOf!1661803318?m=up',
     'Accept-Encoding': 'gzip, deflate, br',
     'Accept-Language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7',
-    'Cache-Control': 'max-age=0',
-    Connection: 'keep-alive',
-    'Content-Length': 351,
-    'Content-Type': 'application/x-www-form-urlencoded',
-    Cookie: 'Language=zh_CN; JSESSIONID=n4YcJRFkde8Rr1dWEQ_ynMtgAfElkbK8WsSKAoll90FHspgtAReB!-1691802725; jsessionid_cas=9W8cJRPIUWCgsxwmZCZub8MiNwNBqjDQZ5FAp3LIxgpqGb2k6WrI!-1691802725         ',
-    Host: 'cas.hdu.edu.cn',
-    Origin: 'https://cas.hdu.edu.cn',
-    Referer: 'https://cas.hdu.edu.cn/cas/login?service=https%3A%2F%2Fi.hdu.edu.cn%2Ftp_up%2F',
-    'Upgrade-Insecure-Requests': 1,
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.90 Safari/537.36'
+    Cookie: 'tp_up=uu__GyqlnihxRYaqhbtL6L95mW70dtrKkKJgttj5N4QJOavgLNOf!1661803318',
   }
 };
 

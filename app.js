@@ -8,13 +8,13 @@ const fs = require('fs')
 const handleBlogRouter = require('./src/router/blog')
 const handleUserRouter = require('./src/router/user')
 const handleUploadRouter = require('./src/router/upload')
+const handleTestRouter = require('./src/router/test')
 
 const { accessLog, errorLog } = require('./src/utils/log')
 const { formatDate } = require('./src/utils')
 
 const tempPath = path.resolve(__dirname, '/temp') // 临时文件位置
 const staticPath = path.resolve(process.cwd(), `./public/`) // 静态文件地址
-
 
 fs.access(tempPath, fs.constants.F_OK, (err) => {
   if (err) {
@@ -78,6 +78,7 @@ const getPostData = (req) => {
     }
     let postData = ''
     req.on('data', chunk => {
+      console.log(chunk)
       postData += chunk.toString()
     })
     req.on('end', () => {
@@ -104,7 +105,7 @@ const getPostData = (req) => {
 
 
 const serverHandle = async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:1998'); //这个表示任意域名都可以访问，这样写不能携带cookie了。
+  res.setHeader('Access-Control-Allow-Origin', '*'); //这个表示任意域名都可以访问，这样写不能携带cookie了。
   res.setHeader('Access-Control-Allow-Credentials', 'true')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , content-type');
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');//设置方法
@@ -187,6 +188,11 @@ const serverHandle = async (req, res) => {
     return
   }
 
+  const testData = await handleTestRouter(req, res)
+  if (testData) {
+    res.end(JSON.stringify(testData))
+    return
+  }
   if (req.path.includes('/uploads/file/')) {
     console.log(path.resolve(staticPath, `./${decodeURIComponent(req.path)}`))
     // return `http://localhost:1997/${req.path}`
